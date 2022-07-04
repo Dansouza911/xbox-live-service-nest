@@ -12,6 +12,7 @@ async function bootstrap() {
     .setTitle('Xbox Live')
     .setDescription('Xbox Live Service games')
     .setVersion('1.0')
+    .addServer('https://localhost:3500')
     .addTag('status')
     .addTag('users')
     .build();
