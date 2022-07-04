@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './entities/users.entities';
+import { User } from './entity/users.entity';
 import { uuid } from 'uuidv4';
 
 @Injectable()
