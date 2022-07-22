@@ -1,7 +1,17 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
+import path from 'path';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './users.service';
 
 @ApiTags('users')
@@ -13,7 +23,7 @@ export class UsersController {
   @ApiOperation({
     summary: 'Lista todos os usuários',
   })
-  getAll(): Promise<User[]> {
+  getAll() {
     return this.userService.getAll();
   }
   //
@@ -31,5 +41,21 @@ export class UsersController {
   })
   create(@Body() dto: CreateUserDto): Promise<User> {
     return this.userService.create(dto);
+  }
+
+  @Delete(':id')
+  @ApiOperation({
+    summary: 'Deletar um usuário',
+  })
+  delete(@Param('id') id: string) {
+    return this.userService.delete(id);
+  }
+
+  @Patch(':id')
+  @ApiOperation({
+    summary: 'Atualizar um usuário',
+  })
+  update(@Param('id') id: string, @Body() dto: UpdateUserDto): Promise<User> {
+    return this.userService.update(id, dto);
   }
 }
