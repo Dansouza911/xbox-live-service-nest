@@ -8,11 +8,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
-  getAll() {
-    return this.prisma.user.findMany({
-      select: { password: false, name: true, email: true },
-    });
-  }
 
   create(dto: CreateUserDto): Promise<User> {
     const hashedPassword = bcrypt.hashSync(dto.password, 8);
@@ -24,16 +19,23 @@ export class UserService {
     return this.prisma.user.create({ data });
   }
 
-  getById(id: string): Promise<User> {
+  findAll() {
+    return this.prisma.user.findMany({
+      select: { password: false, name: true, email: true },
+    });
+  }
+
+  findOne(id: string): Promise<User> {
     return this.prisma.user.findUnique({ where: { id } });
   }
-  delete(id: string) {
+
+  update(id: string, dto: UpdateUserDto): Promise<User> {
+    return this.prisma.user.update({ where: { id }, data: dto });
+  }
+  remove(id: string) {
     return this.prisma.user.delete({
       where: { id },
       select: { name: true, email: true },
     });
-  }
-  update(id: string, dto: UpdateUserDto): Promise<User> {
-    return this.prisma.user.update({ where: { id }, data: dto });
   }
 }

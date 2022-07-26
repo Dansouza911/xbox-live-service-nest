@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
-import path from 'path';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './users.service';
@@ -19,22 +18,6 @@ import { UserService } from './users.service';
 export class UsersController {
   constructor(private readonly userService: UserService) {}
 
-  @Get()
-  @ApiOperation({
-    summary: 'Lista todos os usuários',
-  })
-  getAll() {
-    return this.userService.getAll();
-  }
-  //
-  @Get(':id')
-  @ApiOperation({
-    summary: 'Lista usuario por id',
-  })
-  getById(@Param('id') id: string): Promise<User> {
-    return this.userService.getById(id);
-  }
-  //
   @Post()
   @ApiOperation({
     summary: 'Cria um novo usuário',
@@ -43,13 +26,22 @@ export class UsersController {
     return this.userService.create(dto);
   }
 
-  @Delete(':id')
+  @Get()
   @ApiOperation({
-    summary: 'Deletar um usuário',
+    summary: 'Lista todos os usuários',
   })
-  delete(@Param('id') id: string) {
-    return this.userService.delete(id);
+  findAll() {
+    return this.userService.findAll();
   }
+  //
+  @Get(':id')
+  @ApiOperation({
+    summary: 'Lista usuario por id',
+  })
+  findOne(@Param('id') id: string): Promise<User> {
+    return this.userService.findOne(id);
+  }
+  //
 
   @Patch(':id')
   @ApiOperation({
@@ -57,5 +49,12 @@ export class UsersController {
   })
   update(@Param('id') id: string, @Body() dto: UpdateUserDto): Promise<User> {
     return this.userService.update(id, dto);
+  }
+  @Delete(':id')
+  @ApiOperation({
+    summary: 'Deletar um usuário',
+  })
+  remove(@Param('id') id: string) {
+    return this.userService.remove(id);
   }
 }
