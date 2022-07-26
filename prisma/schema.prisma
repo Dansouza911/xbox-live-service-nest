@@ -11,11 +11,24 @@ datasource db {
 }
 
 model User {
-  id String @id @default(uuid())
-  name String
-  email String @unique
-  password String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id         String   @id @default(uuid())
+  name       String
+  email      String   @unique
+  password   String
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("user")
 }
 
+model Product {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String
+  price       Float
+  image       String
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("product")
+}
