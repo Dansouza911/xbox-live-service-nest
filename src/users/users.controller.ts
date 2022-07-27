@@ -22,7 +22,7 @@ export class UsersController {
   @ApiOperation({
     summary: 'Cria um novo usuário',
   })
-  create(@Body() dto: CreateUserDto): Promise<User> {
+  create(@Body() dto: CreateUserDto): Promise<User | void> {
     return this.userService.create(dto);
   }
 
@@ -47,7 +47,10 @@ export class UsersController {
   @ApiOperation({
     summary: 'Atualizar um usuário',
   })
-  update(@Param('id') id: string, @Body() dto: UpdateUserDto): Promise<User> {
+  update(
+    @Param('id') id: string,
+    @Body() dto: UpdateUserDto,
+  ): Promise<User | void> {
     return this.userService.update(id, dto);
   }
   @Delete(':id')

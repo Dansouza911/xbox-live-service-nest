@@ -22,7 +22,7 @@ export class ProductsController {
   @ApiOperation({
     summary: 'Criação de Produtos',
   })
-  create(@Body() dto: CreateProductDto): Promise<Product> {
+  create(@Body() dto: CreateProductDto): Promise<Product | void> {
     return this.productsService.create(dto);
   }
 
@@ -49,7 +49,7 @@ export class ProductsController {
   update(
     @Param('id') id: string,
     @Body() dto: UpdateProductDto,
-  ): Promise<Product> {
+  ): Promise<Product | void> {
     return this.productsService.update(id, dto);
   }
 
