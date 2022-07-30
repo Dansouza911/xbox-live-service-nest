@@ -35,7 +35,6 @@ export class UserService {
     const user: User = await this.prisma.user.findUnique({
       where: { id },
     });
-    console.log(user);
 
     if (!user) {
       throw new NotFoundException(`Entrada do '${id}' não encontrada`);
