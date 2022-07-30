@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateGamesDto } from './dto/create-games.dto';
-import { UpdateProductDto } from './dto/update-games.dto';
+import { UpdateGamesDto } from './dto/update-games.dto';
 import { Games } from './entities/games.entity';
 
 @Injectable()
@@ -27,7 +27,6 @@ export class GamesService {
     const games: Games = await this.prisma.games.findUnique({
       where: { id },
     });
-    console.log(games);
 
     if (!games) {
       throw new NotFoundException(`Entrada do '${id}' não encontrada`);
@@ -46,7 +45,7 @@ export class GamesService {
     return this.prisma.games.findUnique({ where: { id } });
   }
 
-  async update(id: string, dto: UpdateProductDto): Promise<Games | void> {
+  async update(id: string, dto: UpdateGamesDto): Promise<Games | void> {
     await this.verifyIdAndReturnUser(id);
     return await this.prisma.games
       .update({ where: { id }, data: dto })
