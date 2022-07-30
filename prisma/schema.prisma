@@ -21,14 +21,18 @@ model User {
   @@map("user")
 }
 
-model Product {
+model Games {
   id          String   @id @default(uuid())
-  name        String   @unique
+  title        String   @unique @map("title")
   description String
   price       Float
   image       String
+  year Int
+  imdbScore Int
+  trailerYoutubeUrl String
+  gameplayYoutubeUrl String
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 
-  @@map("product")
+  @@map("games")
 }

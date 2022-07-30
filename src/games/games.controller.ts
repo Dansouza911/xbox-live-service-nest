@@ -7,22 +7,22 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { ProductsService } from './products.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { GamesService } from './games.service';
+import { CreateGamesDto } from './dto/create-games.dto';
+import { UpdateProductDto } from './dto/update-games.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Product } from './entities/product.entity';
+import { Games } from './entities/games.entity';
 
 @ApiTags('products')
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: GamesService) {}
 
   @Post()
   @ApiOperation({
     summary: 'Criação de Produtos',
   })
-  create(@Body() dto: CreateProductDto): Promise<Product | void> {
+  create(@Body() dto: CreateGamesDto): Promise<Games | void> {
     return this.productsService.create(dto);
   }
 
@@ -30,7 +30,7 @@ export class ProductsController {
   @ApiOperation({
     summary: 'Listagem de Produtos',
   })
-  findAll(): Promise<Product[]> {
+  findAll(): Promise<Games[]> {
     return this.productsService.findAll();
   }
 
@@ -38,7 +38,7 @@ export class ProductsController {
   @ApiOperation({
     summary: 'listagem  de um Produtos',
   })
-  findOne(@Param('id') id: string): Promise<Product> {
+  findOne(@Param('id') id: string): Promise<Games> {
     return this.productsService.findOne(id);
   }
 
@@ -49,7 +49,7 @@ export class ProductsController {
   update(
     @Param('id') id: string,
     @Body() dto: UpdateProductDto,
-  ): Promise<Product | void> {
+  ): Promise<Games | void> {
     return this.productsService.update(id, dto);
   }
 

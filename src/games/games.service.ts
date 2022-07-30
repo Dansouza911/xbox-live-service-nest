@@ -4,35 +4,35 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { Product } from './entities/product.entity';
+import { CreateGamesDto } from './dto/create-games.dto';
+import { UpdateProductDto } from './dto/update-games.dto';
+import { Games } from './entities/games.entity';
 
 @Injectable()
-export class ProductsService {
+export class GamesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(dto: CreateProductDto): Promise<Product | void> {
+  async create(dto: CreateGamesDto): Promise<Games | void> {
     try {
-      return await this.prisma.product.create({ data: dto });
+      return await this.prisma.games.create({ data: dto });
     } catch (error) {
       return this.handleConstrainUniqueError(error);
     }
   }
 
-  findAll(): Promise<Product[]> {
-    return this.prisma.product.findMany();
+  findAll(): Promise<Games[]> {
+    return this.prisma.games.findMany();
   }
-  async verifyIdAndReturnUser(id: string): Promise<Product> {
-    const product: Product = await this.prisma.product.findUnique({
+  async verifyIdAndReturnUser(id: string): Promise<Games> {
+    const games: Games = await this.prisma.games.findUnique({
       where: { id },
     });
-    console.log(product);
+    console.log(games);
 
-    if (!product) {
+    if (!games) {
       throw new NotFoundException(`Entrada do '${id}' não encontrada`);
     }
-    return product;
+    return games;
   }
   handleConstrainUniqueError(error: Error): never {
     const splitedMessage = error.message.split('`');
@@ -41,20 +41,20 @@ export class ProductsService {
     }' não está respeitando a constrant UNIQUE`;
     throw new UnprocessableEntityException(errorMessage);
   }
-  findOne(id: string): Promise<Product> {
+  findOne(id: string): Promise<Games> {
     this.verifyIdAndReturnUser(id);
-    return this.prisma.product.findUnique({ where: { id } });
+    return this.prisma.games.findUnique({ where: { id } });
   }
 
-  async update(id: string, dto: UpdateProductDto): Promise<Product | void> {
+  async update(id: string, dto: UpdateProductDto): Promise<Games | void> {
     await this.verifyIdAndReturnUser(id);
-    return await this.prisma.product
+    return await this.prisma.games
       .update({ where: { id }, data: dto })
       .catch(this.handleConstrainUniqueError);
   }
 
   async remove(id: string) {
     await this.verifyIdAndReturnUser(id);
-    return this.prisma.product.delete({ where: { id } });
+    return this.prisma.games.delete({ where: { id } });
   }
 }
