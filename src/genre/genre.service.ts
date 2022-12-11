@@ -1,9 +1,6 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { handleError } from 'src/utils/handle-error.utils';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
 import { Genre } from './entities/genre.entity';
@@ -12,50 +9,44 @@ import { Genre } from './entities/genre.entity';
 export class GenreService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(dto: CreateGenreDto): Promise<Genre> {
-    return this.prisma.genre
-      .create({ data: dto })
-      .catch(this.handleConstrainUniqueError);
-  }
-
   findAll(): Promise<Genre[]> {
     return this.prisma.genre.findMany();
   }
 
-  async verifyIdAndReturnGenre(id: string): Promise<Genre> {
-    const genre: Genre = await this.prisma.genre.findUnique({
-      where: { id },
-    });
-
-    if (!genre) {
-      throw new NotFoundException(`Entrada do '${id}' não encontrada`);
+  async verifyIdAndReturnGenre(id: number): Promise<Genre> {
+    const record = await this.prisma.genre.findUnique({ where: { id } });
+    if (!record) {
+      throw new NotFoundException(`Id ${id} register was not found.`);
     }
-    return genre;
+    return record;
   }
 
-  handleConstrainUniqueError(error: Error): never {
-    const splitedMessage = error.message.split('`');
-    const errorMessage = `Entrada '${
-      splitedMessage[splitedMessage.length - 2]
-    }' não está respeitando a constrant UNIQUE`;
-    throw new UnprocessableEntityException(errorMessage);
-  }
-
-  findOne(id: string): Promise<Genre> {
+  findOne(id: number): Promise<Genre> {
     return this.verifyIdAndReturnGenre(id);
   }
 
-  async update(id: string, dto: UpdateGenreDto): Promise<Genre> {
-    await this.verifyIdAndReturnGenre(id);
-
+  create(createGenreDto: CreateGenreDto): Promise<Genre> {
+    const data = { ...createGenreDto };
     return this.prisma.genre
-      .update({ where: { id }, data: dto })
-      .catch(this.handleConstrainUniqueError);
+      .create({ data })
+      .catch(handleError);
   }
 
-  async remove(id: string) {
+  async update(id: number, updateGenreDto: UpdateGenreDto): Promise<Genre> {
     await this.verifyIdAndReturnGenre(id);
+    const data: Partial<Genre> = { ...updateGenreDto };
+    return this.prisma.genre
+      .update({
+        where: { id },
+        data,
+      })
+      .catch(handleError);
+  }
 
-    return this.prisma.genre.delete({ where: { id } });
+  async remove(id: number) {
+    await this.verifyIdAndReturnGenre(id);
+    await this.prisma.genre.delete({
+      where: { id },
+    });
   }
 }

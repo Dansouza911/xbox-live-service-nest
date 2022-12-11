@@ -1,6 +1,6 @@
 export class Genre {
-  id: string;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
+  id?: number;
+  genre_title: string;
+  created_at?: Date;
+  updated_at?: Date;
 }

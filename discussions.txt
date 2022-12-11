@@ -1,0 +1,6 @@
+1) error when deleting a user that has profiles => app crash
+
+rota para quem favoritou o jogo
+quantos favoritaram o jogo
+emails promocionais para quem favoritou o jogo
+admin pode fazer desconto

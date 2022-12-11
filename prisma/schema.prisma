@@ -10,38 +10,65 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
+model user {
+  id        String  @id @default(uuid())
+  user_name String
+  email     String  @unique
   password  String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  is_admin  Boolean
+  cpf       String  @unique
 
-  @@map("user")
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  profiles   profile[]
 }
 
-model Games {
-  id                 String   @id @default(uuid())
-  title              String   @unique @map("title")
-  description        String
-  price              Float
-  image              String
-  year               Int
-  imdbScore          Int
-  trailerYoutubeUrl  String
-  gameplayYoutubeUrl String
-  createdAt          DateTime @default(now()) @map("created_at")
-  updatedAt          DateTime @updatedAt @map("updated_at")
+model genre {
+  id          Int    @id @default(autoincrement())
+  genre_title String @unique
+  games       game[]
 
-  @@map("games")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
-model Genre {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+model game {
+  id              String     @id @default(uuid())
+  title           String     @unique
+  cover_image_url String
+  description     String
+  year            Int
+  score           Float
+  trailer_url     String
+  gameplay_url    String
+  favorites       favorite[]
+  genres          genre[]
 
-  @@map("genre")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model profile {
+  id            String     @id @default(uuid())
+  gamer_tag     String     @unique
+  image_url     String
+  user_owner    user       @relation(fields: [user_owner_id], references: [id], onDelete: Cascade)
+  user_owner_id String
+  favorites     favorite[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model favorite {
+  id           String   @id @default(uuid())
+  favorited_at DateTime @default(now())
+
+  game_title String
+  game       game   @relation(fields: [game_title], references: [title], onDelete: Cascade)
+
+  gamer_tag String
+  profile   profile @relation(fields: [gamer_tag], references: [gamer_tag], onDelete: Cascade)
+
+  @@unique([game_title, gamer_tag])
 }
