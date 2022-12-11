@@ -8,7 +8,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getAppStatus(): string {
-    return this.appService.getAppStatus();
+  getHello(): string {
+    return this.appService.getHello();
   }
 }
