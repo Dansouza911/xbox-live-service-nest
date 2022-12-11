@@ -83,9 +83,6 @@ Start the server
   npm run start:dev
 ```
 
-## Authors
-
-- [@darcanj0](https://www.github.com/darcanj0)
 
 ## License
 
